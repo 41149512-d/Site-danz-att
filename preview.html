@@ -600,15 +600,15 @@ danz.inzx
 
 <div class="menu">
 
-<button class="menu-btn active" data-tab="shop">
+<button type="button" class="menu-btn active" data-tab="shop">
 Compras
 </button>
 
-<button class="menu-btn" data-tab="profile">
+<button type="button" class="menu-btn" data-tab="profile">
 Perfil
 </button>
 
-<button class="menu-btn" data-tab="tracking">
+<button type="button" class="menu-btn" data-tab="tracking">
 Rastreamento
 </button>
 
@@ -638,13 +638,13 @@ placeholder="Pesquisar roupas, acessórios ou estilos..."
 
 <div class="top-actions">
 
-<button class="icon-btn">
+<button type="button" class="icon-btn" aria-label="Ver favoritos">
 ❤
 </button>
 
-<button class="icon-btn">
+<button type="button" class="icon-btn" aria-label="Ver carrinho">
 🛒
-<div class="badge" id="cartCounter">
+<div class="badge" id="cartCounter" aria-live="polite">
 0
 </div>
 </button>
@@ -674,7 +674,7 @@ Moda urbana premium inspirada nas maiores marcas do mundo.
 Minimalismo, tecnologia e atitude.
 </p>
 
-<button class="hero-btn" onclick="scrollCatalog()">
+<button type="button" class="hero-btn" onclick="scrollCatalog()">
 Explorar Coleção
 </button>
 
@@ -694,19 +694,19 @@ Produtos Urban
 
 <div class="categories">
 
-<button class="category active" data-category="all">
+<button type="button" class="category active" data-category="all">
 Todos
 </button>
 
-<button class="category" data-category="camisetas">
+<button type="button" class="category" data-category="camisetas">
 Camisetas
 </button>
 
-<button class="category" data-category="moletons">
+<button type="button" class="category" data-category="moletons">
 Moletons
 </button>
 
-<button class="category" data-category="jaquetas">
+<button type="button" class="category" data-category="jaquetas">
 Jaquetas
 </button>
 
@@ -718,7 +718,7 @@ Jaquetas
 
 <!-- PRODUCT -->
 
-<div class="product-card" data-category="camisetas">
+<div class="product-card" data-category="camisetas" data-product-id="camiseta-oversized">
 
 <div class="product-image">
 
@@ -729,9 +729,10 @@ Camisetas
 <img
 loading="lazy"
 src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop"
+alt="Camiseta oversized branca em estilo streetwear"
 >
 
-<button class="favorite">
+<button type="button" class="favorite" aria-label="Favoritar Camiseta Oversized" aria-pressed="false">
 ❤
 </button>
 
@@ -755,6 +756,7 @@ Camiseta oversized streetwear premium em algodão.
 </p>
 
 <button
+type="button"
 class="buy-btn"
 onclick="buyProduct(
 'Camiseta Oversized',
@@ -770,7 +772,7 @@ Comprar Agora
 
 <!-- PRODUCT -->
 
-<div class="product-card" data-category="moletons">
+<div class="product-card" data-category="moletons" data-product-id="moletom-street">
 
 <div class="product-image">
 
@@ -781,9 +783,10 @@ Moletons
 <img
 loading="lazy"
 src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop"
+alt="Moletom streetwear oversized em composição urbana"
 >
 
-<button class="favorite">
+<button type="button" class="favorite" aria-label="Favoritar Moletom Street" aria-pressed="false">
 ❤
 </button>
 
@@ -804,6 +807,7 @@ Moletom premium underground oversized.
 </p>
 
 <button
+type="button"
 class="buy-btn"
 onclick="buyProduct(
 'Moletom Street',
@@ -819,7 +823,7 @@ Comprar Agora
 
 <!-- PRODUCT -->
 
-<div class="product-card" data-category="jaquetas">
+<div class="product-card" data-category="jaquetas" data-product-id="jaqueta-techwear">
 
 <div class="product-image">
 
@@ -830,9 +834,10 @@ Jaquetas
 <img
 loading="lazy"
 src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?q=80&w=1200&auto=format&fit=crop"
+alt="Jaqueta techwear preta em visual urbano"
 >
 
-<button class="favorite">
+<button type="button" class="favorite" aria-label="Favoritar Jaqueta Techwear" aria-pressed="false">
 ❤
 </button>
 
@@ -853,6 +858,7 @@ Jaqueta tactical futurista techwear.
 </p>
 
 <button
+type="button"
 class="buy-btn"
 onclick="buyProduct(
 'Jaqueta Techwear',
@@ -885,6 +891,7 @@ PROFILE TAB
 <img
 class="avatar"
 src="https://i.pravatar.cc/300"
+alt="Avatar do perfil de Daniel Brandão"
 >
 
 <h2>
@@ -906,7 +913,7 @@ Membro VIP Urban
 
 <div class="info-card">
 <h3>Favoritos</h3>
-<p id="favoriteCount">
+<p id="favoriteCount" aria-live="polite">
 0 itens favoritos
 </p>
 </div>
@@ -986,8 +993,6 @@ vip:true
 
 products:[]
 }
-
-console.log("Backend conectado:",API)
 
 /* =====================================================
 TABS
@@ -1113,20 +1118,36 @@ let favorites = JSON.parse(
 localStorage.getItem("favorites")
 ) || []
 
-updateFavorites()
-
 favoriteButtons.forEach(button=>{
+
+const card =
+button.closest(".product-card")
+
+const productId =
+card.dataset.productId
+
+if(favorites.includes(productId)){
+button.classList.add("active")
+button.setAttribute("aria-pressed","true")
+}
 
 button.addEventListener("click",()=>{
 
-button.classList.toggle("active")
+const isFavorite =
+favorites.includes(productId)
 
-if(button.classList.contains("active")){
-favorites.push("item")
-showToast("Produto favoritado")
-}else{
-favorites.pop()
+if(isFavorite){
+favorites = favorites.filter(item=>
+item !== productId
+)
+button.classList.remove("active")
+button.setAttribute("aria-pressed","false")
 showToast("Favorito removido")
+}else{
+favorites.push(productId)
+button.classList.add("active")
+button.setAttribute("aria-pressed","true")
+showToast("Produto favoritado")
 }
 
 localStorage.setItem(
@@ -1139,6 +1160,8 @@ updateFavorites()
 })
 
 })
+
+updateFavorites()
 
 function updateFavorites(){
 
@@ -1172,11 +1195,12 @@ updateCart()
 
 showToast(name + " adicionado ao carrinho")
 
-setTimeout(()=>{
+const checkoutWindow =
+window.open(link,"_blank","noopener,noreferrer")
 
-window.open(link,"_blank")
-
-},700)
+if(!checkoutWindow){
+showToast("Permita pop-ups para abrir o produto")
+}
 
 }
 
